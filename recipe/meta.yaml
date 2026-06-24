@@ -1,0 +1,65 @@
+{% set name = "fastsafetensors" %}
+{% set version = "0.3.2" %}
+
+package:
+  name: {{ name }}
+  version: {{ version }}
+
+source:
+  # GitHub archive, not the PyPI sdist: the sdist omits
+  # fastsafetensors/cpp/dstorage_reader.cpp, which setup.py compiles on Windows.
+  url: https://github.com/foundation-model-stack/{{ name }}/archive/refs/tags/{{ version }}.tar.gz
+  sha256: f6911331211579e227618934bbb2f4cb348cc667bbbc8ebaef7d5e825d9ba25b
+
+build:
+  number: 0
+  # No macOS: setup.py hardcodes the libstdc++ link and the C++ extension uses
+  # Linux-only O_DIRECT; upstream publishes no macOS wheels.
+  skip: true  # [py<310 or osx]
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+
+requirements:
+  build:
+    - {{ compiler('cxx') }}
+    - {{ stdlib('c') }}
+  host:
+    - python
+    - pip
+    - setuptools >=78.1.1
+    - wheel
+    - pybind11
+    - pybind11-abi
+  run:
+    - python
+    - typer >=0.9.0
+    # parallel_loader.py does an unconditional top-level `import torch`, so torch is
+    # required to import fastsafetensors despite upstream listing it only as a test extra.
+    - pytorch >=2.10.0
+
+test:
+  requires:
+    - pip
+  imports:
+    - fastsafetensors
+    - fastsafetensors.cpp
+  commands:
+    - pip check
+
+about:
+  home: https://github.com/foundation-model-stack/fastsafetensors
+  summary: High-performance safetensors model loader
+  description: |
+    fastsafetensors is an efficient safetensors loader that accelerates loading
+    of large model weights. It supports Linux/CUDA (including GPU Direct Storage),
+    ROCm, Windows, 3FS, and unified-memory systems. vLLM and SGLang expose a
+    `--load-format fastsafetensors` option that uses this library to speed up
+    model initialization.
+  license: Apache-2.0
+  license_family: APACHE
+  license_file: LICENSE
+  doc_url: https://github.com/foundation-model-stack/fastsafetensors/tree/main/docs
+  dev_url: https://github.com/foundation-model-stack/fastsafetensors
+
+extra:
+  recipe-maintainers:
+    - xkong-anaconda
