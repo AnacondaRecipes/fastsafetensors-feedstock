@@ -1,5 +1,6 @@
 {% set name = "fastsafetensors" %}
 {% set version = "0.3.2" %}
+{% set pybind11abi_ver = 4 if py <= 311 else 5 %}
 
 package:
   name: {{ name }}
@@ -28,7 +29,7 @@ requirements:
     - setuptools >=78.1.1
     - wheel
     - pybind11
-    - pybind11-abi ==5
+    - pybind11-abi =={{ pybind11abi_ver }}
   run:
     - python
     - typer >=0.9.0
