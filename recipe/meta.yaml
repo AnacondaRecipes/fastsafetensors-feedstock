@@ -1,5 +1,8 @@
 {% set name = "fastsafetensors" %}
 {% set version = "0.3.2" %}
+
+# pytorch 2.11 is built against pybind11-abi==4 for python 3.10 and python 3.11 in linux, and 
+# pybind11-abi==5 for all other builds
 {% set pybind11abi_ver = 5 if (py >= 312 or win) else 4 %}
 
 package:
