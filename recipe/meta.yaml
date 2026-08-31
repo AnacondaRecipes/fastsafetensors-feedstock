@@ -1,6 +1,6 @@
 {% set name = "fastsafetensors" %}
 {% set version = "0.3.2" %}
-{% set pybind11abi_ver = 4 if py <= 311 else 5 %}
+{% set pybind11abi_ver = 5 if (py >= 312 or win) else 4 %}
 
 package:
   name: {{ name }}
