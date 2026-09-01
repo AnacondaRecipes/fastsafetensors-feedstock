@@ -1,6 +1,10 @@
 {% set name = "fastsafetensors" %}
 {% set version = "0.3.2" %}
 
+# pytorch 2.11 is built against pybind11-abi==4 for python 3.10 and python 3.11 in linux, and 
+# pybind11-abi==5 for all other builds
+{% set pybind11abi_ver = 5 if (py >= 312 or win) else 4 %}
+
 package:
   name: {{ name }}
   version: {{ version }}
@@ -12,7 +16,7 @@ source:
   sha256: f6911331211579e227618934bbb2f4cb348cc667bbbc8ebaef7d5e825d9ba25b
 
 build:
-  number: 0
+  number: 1
   # No macOS: setup.py hardcodes the libstdc++ link and the C++ extension uses
   # Linux-only O_DIRECT; upstream publishes no macOS wheels.
   skip: true  # [py<310 or osx]
@@ -28,7 +32,7 @@ requirements:
     - setuptools >=78.1.1
     - wheel
     - pybind11
-    - pybind11-abi
+    - pybind11-abi =={{ pybind11abi_ver }}
   run:
     - python
     - typer >=0.9.0
