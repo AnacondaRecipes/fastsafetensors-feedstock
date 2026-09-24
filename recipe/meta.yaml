@@ -28,12 +28,10 @@ requirements:
     - setuptools >=78.1.1
     - wheel
     - pybind11
+    - pybind11-abi =11
   run:
     - python
     - typer >=0.9.0
-    # parallel_loader.py does an unconditional top-level `import torch`, so torch is
-    # required to import fastsafetensors despite upstream listing it only as a test extra.
-    - pytorch >=2.10.0
 
 test:
   requires:
