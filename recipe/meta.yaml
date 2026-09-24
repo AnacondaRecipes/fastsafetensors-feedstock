@@ -1,9 +1,5 @@
 {% set name = "fastsafetensors" %}
-{% set version = "0.3.2" %}
-
-# pytorch 2.11 is built against pybind11-abi==4 for python 3.10 and python 3.11 in linux, and 
-# pybind11-abi==5 for all other builds
-{% set pybind11abi_ver = 5 if (py >= 312 or win) else 4 %}
+{% set version = "0.4.0" %}
 
 package:
   name: {{ name }}
@@ -13,7 +9,7 @@ source:
   # GitHub archive, not the PyPI sdist: the sdist omits
   # fastsafetensors/cpp/dstorage_reader.cpp, which setup.py compiles on Windows.
   url: https://github.com/foundation-model-stack/{{ name }}/archive/refs/tags/{{ version }}.tar.gz
-  sha256: f6911331211579e227618934bbb2f4cb348cc667bbbc8ebaef7d5e825d9ba25b
+  sha256: d36df43832f66371e6976a5609c020dc6eabe3e0774aaeaa3f4ef7bd6c861490
 
 build:
   number: 1
@@ -32,7 +28,6 @@ requirements:
     - setuptools >=78.1.1
     - wheel
     - pybind11
-    - pybind11-abi =={{ pybind11abi_ver }}
   run:
     - python
     - typer >=0.9.0
