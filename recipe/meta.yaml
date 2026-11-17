@@ -1,5 +1,5 @@
 {% set name = "fastsafetensors" %}
-{% set version = "0.4.0" %}
+{% set version = "0.5.0" %}
 
 package:
   name: {{ name }}
@@ -9,13 +9,11 @@ source:
   # GitHub archive, not the PyPI sdist: the sdist omits
   # fastsafetensors/cpp/dstorage_reader.cpp, which setup.py compiles on Windows.
   url: https://github.com/foundation-model-stack/{{ name }}/archive/refs/tags/{{ version }}.tar.gz
-  sha256: d36df43832f66371e6976a5609c020dc6eabe3e0774aaeaa3f4ef7bd6c861490
+  sha256: 1cb823c771207088fe75f2d5c9310a42af6cbe12b4b5c5ef57cce0587a493cb1
 
 build:
-  number: 1
-  # No macOS: setup.py hardcodes the libstdc++ link and the C++ extension uses
-  # Linux-only O_DIRECT; upstream publishes no macOS wheels.
-  skip: true  # [py<310 or osx]
+  number: 0
+  skip: true  # [py<310]
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
@@ -26,12 +24,14 @@ requirements:
     - python
     - pip
     - setuptools >=78.1.1
-    - wheel
-    - pybind11
-    - pybind11-abi =11
+    - pybind11 >=3.1.0
   run:
     - python
     - typer >=0.9.0
+  run_constrained:
+    - instanttensor >=0.2.2
+    - tqdm >=4.66.3
+    - fastsafetensor-3fs-reader >=0.3.3
 
 test:
   requires:
